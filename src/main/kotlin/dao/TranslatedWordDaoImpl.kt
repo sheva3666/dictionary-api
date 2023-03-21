@@ -11,6 +11,10 @@ class TranslatedWordDaoImpl: TranslatedWordDao {
         return translatedWords.firstOrNull {it.id == id && it.user == user}
     }
 
+    override fun getAllTranslatedWords(user: String, language: String): List<TranslatedWord>? {
+        return translatedWords.filter {it.user == user && it.language == language}
+    }
+
     override fun addTranslatedWord(draft: TranslatedWordDraft): TranslatedWord {
         val draftId = draft.word
         val translatedWord = TranslatedWord(
