@@ -9,4 +9,7 @@ interface EnglishWordDao {
     fun getEnglishWord(id: String, user: String, language: String): EnglishWord?
 
     fun addEnglishWord(draft: EnglishWordDraft): EnglishWord
+
+    fun checkEnglishWord(word: String): EnglishWord?
+
 }
