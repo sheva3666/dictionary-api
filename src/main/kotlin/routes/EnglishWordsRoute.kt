@@ -1,6 +1,7 @@
 package routes
 
 import dao.EnglishWordDaoImpl
+import dao.TranslatedWordDao
 import dto.EnglishWordDraft
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -9,7 +10,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import repository.EnglishWordDao
 
-fun Route.englishWordsRoute() {
+fun Route.englishWordsRoute(translatedWordsRepository: TranslatedWordDao) {
     val englishWordsRepository: EnglishWordDao = EnglishWordDaoImpl()
 
 
@@ -18,7 +19,7 @@ fun Route.englishWordsRoute() {
 
         val englishWords = englishWordsRepository.getAllEnglishWords(user)
 
-        if (user == null) {
+        if (englishWords == null) {
             call.respond(
                 HttpStatusCode.NotFound,
                 "First you should add new words"
@@ -33,6 +34,7 @@ fun Route.englishWordsRoute() {
 
         if (wordIsInList == null) {
             val word = englishWordsRepository.addEnglishWord(englishWordDraft)
+            translatedWordsRepository.addTranslatedWord(englishWordDraft)
             call.respond(
                 HttpStatusCode.OK,
                 "word ${word.word} added to your list"
@@ -40,7 +42,7 @@ fun Route.englishWordsRoute() {
         } else {
             call.respond(
                 HttpStatusCode.OK,
-                "Something went wrong"
+                "This word already on your list."
             )
         }
     }

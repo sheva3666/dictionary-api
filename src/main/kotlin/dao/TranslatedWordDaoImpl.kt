@@ -1,28 +1,27 @@
 package dao
 
-import TranslatedWordDraft
+import dto.EnglishWordDraft
 import dto.TranslatedWord
 
 class TranslatedWordDaoImpl: TranslatedWordDao {
     private val translatedWords = mutableListOf<TranslatedWord>(
-        TranslatedWord("mother-translated", "admin", "mother", "мама", "ukrainian",)
+        TranslatedWord("mother-translated", "admin", "мама", "ukrainian",)
     )
     override fun getTranslatedWord(id: String, user: String): TranslatedWord? {
         return translatedWords.firstOrNull {it.id == id && it.user == user}
     }
 
-    override fun getAllTranslatedWords(user: String, language: String): List<TranslatedWord>? {
+    override fun getAllTranslatedWords(user: String, language: String): List<TranslatedWord> {
         return translatedWords.filter {it.user == user && it.language == language}
     }
 
-    override fun addTranslatedWord(draft: TranslatedWordDraft): TranslatedWord {
-        val draftId = draft.word
+    override fun addTranslatedWord(draft: EnglishWordDraft): TranslatedWord {
         val translatedWord = TranslatedWord(
-            id = "$draftId-translated",
+            id = "${draft.word}-translated",
             user = draft.user,
-            word = draft.word,
+            word = draft.translate,
             language = draft.language,
-            englishVersion = draft.englishVersion
+
         )
         translatedWords.add(translatedWord)
         return translatedWord

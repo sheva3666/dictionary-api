@@ -1,6 +1,6 @@
 package dao
 
-import TranslatedWordDraft
+import dto.EnglishWordDraft
 import dto.TranslatedWord
 
 interface TranslatedWordDao {
@@ -8,5 +8,5 @@ interface TranslatedWordDao {
 
     fun getAllTranslatedWords(user: String, language: String):  List<TranslatedWord>?
 
-    fun addTranslatedWord(draft: TranslatedWordDraft): TranslatedWord
+    fun addTranslatedWord(draft: EnglishWordDraft): TranslatedWord
 }
