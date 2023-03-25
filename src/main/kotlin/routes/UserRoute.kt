@@ -1,5 +1,6 @@
 package routes
 
+import dao.AuthDao
 import dao.UserDao
 import dao.UserDaoImpl
 import dto.UserDraft
@@ -9,7 +10,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Route.usersRoute() {
+fun Route.usersRoute(authRepository: AuthDao) {
     val userRepository: UserDao = UserDaoImpl()
 
 
@@ -26,6 +27,7 @@ fun Route.usersRoute() {
                 "Email or password is incorrect"
             )
         } else {
+            authRepository.addAuth(user.email)
             call.respond(user)
         }
     }
