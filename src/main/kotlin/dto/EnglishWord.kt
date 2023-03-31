@@ -9,4 +9,6 @@ data class EnglishWord(
     val translateId: String,
     val user: String,
     val word: String,
+    val translate: String,
+    val language: String
 )

@@ -6,15 +6,17 @@ import repository.EnglishWordDao
 
 class EnglishWordDaoImpl: EnglishWordDao {
     private val englishWords = mutableListOf<EnglishWord>(
-        EnglishWord("mother-id", "mother-translate", "admin", "mother", ),
+        EnglishWord("mother-id", "mother-translate", "admin", "mother", "мама", "ukrainian" ),
+        EnglishWord("father-id", "father-translate", "admin", "father", "тато", "ukrainian" ),
 
     )
-    override fun getAllEnglishWords(user: String): List<EnglishWord> {
-        return englishWords.filter {it.user == user}
+    override fun getAllEnglishWords(user: String, language: String): List<EnglishWord>? {
+        return englishWords.filter {it.user == user && it.language == language}
     }
 
-    override fun getEnglishWord(id: String, user: String, language: String): EnglishWord? {
-        TODO("Not yet implemented")
+    override fun getEnglishWord( user: String, language: String): EnglishWord {
+        val listOfWords = englishWords.filter {it.user == user && it.language == language}
+        return listOfWords.random()
     }
 
     override fun addEnglishWord(draft: EnglishWordDraft): EnglishWord {
@@ -22,7 +24,9 @@ class EnglishWordDaoImpl: EnglishWordDao {
             id = "${draft.word}-word",
             user = draft.user,
             translateId = "${draft.word}-translated",
-            word = draft.word
+            word = draft.word,
+            language = draft.language,
+            translate = draft.translate
         )
         englishWords.add(word)
         return word
