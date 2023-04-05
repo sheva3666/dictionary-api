@@ -27,5 +27,13 @@ class UserDaoImpl: UserDao {
         users.add(user)
         return user
     }
+
+    override fun updateUser(id: String, draft: UserDraft): Boolean {
+        val user = users.firstOrNull {it.id == id}
+            ?: return false
+        user.language = draft.language
+        user.languageForLearn = draft.languageForLearn
+        return true
+    }
 }
 

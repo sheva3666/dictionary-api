@@ -13,7 +13,6 @@ import io.ktor.server.routing.*
 fun Route.usersRoute(authRepository: AuthDao) {
     val userRepository: UserDao = UserDaoImpl()
 
-
     get("users/{id}/{password}") {
         val id = call.parameters["id"].toString()
         val password = call.parameters["password"].toString()
@@ -31,6 +30,7 @@ fun Route.usersRoute(authRepository: AuthDao) {
             call.respond(user)
         }
     }
+
     post ("users"){
         val userDraft = call.receive<UserDraft>()
         val userIsInList = userRepository.checkUser(userDraft.email)
@@ -45,6 +45,20 @@ fun Route.usersRoute(authRepository: AuthDao) {
                 HttpStatusCode.OK,
                 "User with this email already registered"
             )
+        }
+    }
+
+    put("users/{id}") {
+        val userDraft = call.receive<UserDraft>()
+        val userId = call.parameters["id"].toString()
+
+        val updated = userRepository.updateUser(userId, userDraft)
+        if (updated) {
+            call.respond(HttpStatusCode.OK)
+        } else {
+            call.respond(
+                HttpStatusCode.NotFound,
+                "Something went wrong")
         }
     }
 }

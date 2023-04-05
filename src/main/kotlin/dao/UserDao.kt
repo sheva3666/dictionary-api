@@ -9,4 +9,6 @@ interface UserDao {
     fun checkUser(id: String): User?
 
     fun addUser(draft: UserDraft): User
+
+    fun updateUser(id: String, draft: UserDraft): Boolean
 }

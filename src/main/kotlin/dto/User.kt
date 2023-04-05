@@ -9,7 +9,7 @@ data class User(
     val name: String,
     val email: String,
     val password: String,
-    val language: String,
-    val languageForLearn: String
+    var language: String,
+    var languageForLearn: String
 
 )
