@@ -9,4 +9,5 @@ data class EnglishWordDraft(
     val word: String,
     val language: String,
     val translate: String,
+    val translateLanguage: String,
 )

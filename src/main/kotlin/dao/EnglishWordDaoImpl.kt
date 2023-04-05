@@ -6,8 +6,8 @@ import repository.EnglishWordDao
 
 class EnglishWordDaoImpl: EnglishWordDao {
     private val englishWords = mutableListOf<EnglishWord>(
-        EnglishWord("mother-id", "mother-translate", "admin", "mother", "мама", "ukrainian" ),
-        EnglishWord("father-id", "father-translate", "admin", "father", "тато", "ukrainian" ),
+        EnglishWord("mother-id", "mother-translate", "admin", "mother", "мама", "ukrainian", "english"),
+        EnglishWord("father-id", "father-translate", "admin", "father", "тато", "ukrainian", "english" ),
 
     )
     override fun getAllEnglishWords(user: String, language: String): List<EnglishWord>? {
@@ -26,6 +26,7 @@ class EnglishWordDaoImpl: EnglishWordDao {
             translateId = "${draft.word}-translated",
             word = draft.word,
             language = draft.language,
+            translateLanguage = draft.translateLanguage,
             translate = draft.translate
         )
         englishWords.add(word)

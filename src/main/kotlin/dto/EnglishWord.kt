@@ -10,5 +10,6 @@ data class EnglishWord(
     val user: String,
     val word: String,
     val translate: String,
+    val translateLanguage: String,
     val language: String
 )
