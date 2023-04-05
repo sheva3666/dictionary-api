@@ -1,5 +1,6 @@
 package routes
 
+import dao.EnglishWordDao
 import dao.EnglishWordDaoImpl
 import dao.TranslatedWordDao
 import dto.EnglishWordDraft
@@ -8,7 +9,6 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import repository.EnglishWordDao
 
 fun Route.englishWordsRoute(translatedWordsRepository: TranslatedWordDao) {
     val englishWordsRepository: EnglishWordDao = EnglishWordDaoImpl()

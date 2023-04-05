@@ -2,7 +2,6 @@ package dao
 
 import dto.EnglishWord
 import dto.EnglishWordDraft
-import repository.EnglishWordDao
 
 class EnglishWordDaoImpl: EnglishWordDao {
     private val englishWords = mutableListOf<EnglishWord>(
