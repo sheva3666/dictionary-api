@@ -25,6 +25,21 @@ fun Route.translatedWordsRoute(translatedWordsRepository: TranslatedWordDao) {
             call.respond(translatedWords)
         }
     }
+
+    get("translate/{language}") {
+        val language = call.parameters["language"].toString()
+
+        val translatedWords = translatedWordsRepository.getRandomTranslatedWords(language)
+
+        if (translatedWords == null) {
+            call.respond(
+                HttpStatusCode.NotFound,
+                "First you should add new words"
+            )
+        } else {
+            call.respond(translatedWords)
+        }
+    }
 //        post ("english"){
 //        val englishWordDraft = call.receive<EnglishWordDraft>()
 //        val wordIsInList = englishWordsRepository.checkEnglishWord(englishWordDraft.word)
