@@ -5,7 +5,7 @@ import dto.UserDraft
 
 class UserDaoImpl: UserDao {
     private val users = mutableListOf<User>(
-        User("admin", "admin", "admin", "admin", "ukrainian")
+        User("admin", "admin", "admin", "admin", "ukrainian", "english")
     )
     override fun getUser(id: String, password: String): User? {
         return users.firstOrNull {it.id == id && it.password == password}
@@ -21,7 +21,8 @@ class UserDaoImpl: UserDao {
             name = draft.name,
             email = draft.email,
             password = draft.password,
-            language = draft.language
+            language = draft.language,
+            languageForLearn = draft.languageForLearn
         )
         users.add(user)
         return user
