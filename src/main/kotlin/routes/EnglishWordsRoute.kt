@@ -14,11 +14,13 @@ fun Route.englishWordsRoute(translatedWordsRepository: TranslatedWordDao) {
     val englishWordsRepository: EnglishWordDao = EnglishWordDaoImpl()
 
 
-    get("english/{user}/{language}") {
+    get("english/{user}/{language}/{translateLanguage}") {
         val user = call.parameters["user"].toString()
         val language = call.parameters["language"].toString()
+        val translateLanguage = call.parameters["translateLanguage"].toString()
 
-        val englishWords = englishWordsRepository.getAllEnglishWords(user, language)
+
+        val englishWords = englishWordsRepository.getAllEnglishWords(user, language, translateLanguage)
 
         if (englishWords == null) {
             call.respond(
@@ -30,11 +32,12 @@ fun Route.englishWordsRoute(translatedWordsRepository: TranslatedWordDao) {
         }
     }
 
-    get("english/random/{user}/{language}") {
+    get("english/random/{user}/{language}/{translateLanguage}") {
         val user = call.parameters["user"].toString()
         val language = call.parameters["language"].toString()
+        val translateLanguage = call.parameters["translateLanguage"].toString()
 
-        val englishWords = englishWordsRepository.getEnglishWord(user, language)
+        val englishWords = englishWordsRepository.getEnglishWord(user, language, translateLanguage)
 
         if (englishWords == null) {
             call.respond(

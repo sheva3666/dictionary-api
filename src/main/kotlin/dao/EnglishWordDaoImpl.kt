@@ -10,12 +10,12 @@ class EnglishWordDaoImpl: EnglishWordDao {
         EnglishWord("father-id", "father-translate", "admin", "father", "тато", "ukrainian", "english" ),
 
     )
-    override fun getAllEnglishWords(user: String, language: String): List<EnglishWord>? {
+    override fun getAllEnglishWords(user: String, language: String, translateLanguage: String): List<EnglishWord> {
         return englishWords.filter {it.user == user && it.language == language}
     }
 
-    override fun getEnglishWord( user: String, language: String): EnglishWord {
-        val listOfWords = englishWords.filter {it.user == user && it.language == language}
+    override fun getEnglishWord( user: String, language: String, translateLanguage: String): EnglishWord {
+        val listOfWords = englishWords.filter {it.user == user && it.language == language && it.translateLanguage == translateLanguage}
         return listOfWords.random()
     }
 
