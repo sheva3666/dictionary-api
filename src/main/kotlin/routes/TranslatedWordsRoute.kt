@@ -40,21 +40,4 @@ fun Route.translatedWordsRoute(translatedWordsRepository: TranslatedWordDao) {
             call.respond(translatedWords)
         }
     }
-//        post ("english"){
-//        val englishWordDraft = call.receive<EnglishWordDraft>()
-//        val wordIsInList = englishWordsRepository.checkEnglishWord(englishWordDraft.word)
-//
-//        if (wordIsInList == null) {
-//            val word = englishWordsRepository.addEnglishWord(englishWordDraft)
-//            call.respond(
-//                HttpStatusCode.OK,
-//                "word ${word.word} added to your list"
-//            )
-//        } else {
-//            call.respond(
-//                HttpStatusCode.OK,
-//                "Something went wrong"
-//            )
-//        }
-//    }
 }

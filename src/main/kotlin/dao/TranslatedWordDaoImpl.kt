@@ -1,14 +1,14 @@
 package dao
 
-import dto.EnglishWordDraft
+import dto.NativeWordDraft
 import dto.TranslatedWord
 
 class TranslatedWordDaoImpl: TranslatedWordDao {
     private val translatedWords = mutableListOf<TranslatedWord>(
-        TranslatedWord("mother-translated", "admin", "мама", "ukrainian",),
-        TranslatedWord("father-translated", "admin", "тато", "ukrainian",),
-        TranslatedWord("water-translated", "admin", "вода", "ukrainian",),
-        TranslatedWord("fire-translated", "admin", "вогонь", "ukrainian",),
+        TranslatedWord("mother-english-translated", "admin", "мама", "ukrainian",),
+        TranslatedWord("father-english-translated", "admin", "тато", "ukrainian",),
+        TranslatedWord("water-english-translated", "admin", "вода", "ukrainian",),
+        TranslatedWord("fire-english-translated", "admin", "вогонь", "ukrainian",),
     )
     override fun getTranslatedWord(id: String, user: String): TranslatedWord? {
         return translatedWords.firstOrNull {it.id == id && it.user == user}
@@ -25,9 +25,9 @@ class TranslatedWordDaoImpl: TranslatedWordDao {
         return translatedWords.filter {it.user == user && it.language == language}
     }
 
-    override fun addTranslatedWord(draft: EnglishWordDraft): TranslatedWord {
+    override fun addTranslatedWord(draft: NativeWordDraft): TranslatedWord {
         val translatedWord = TranslatedWord(
-            id = "${draft.word}-translated",
+            id = "${draft.word}-${draft.language}-translated",
             user = draft.user,
             word = draft.translate,
             language = draft.translateLanguage,
