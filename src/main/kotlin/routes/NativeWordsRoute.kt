@@ -14,7 +14,7 @@ fun Route.englishWordsRoute(translatedWordsRepository: TranslatedWordDao) {
     val nativeWordsRepository: NativeWordDao = NativeWordDaoImpl()
 
 
-    get("english/{user}/{language}/{translateLanguage}") {
+    get("native/{user}/{language}/{translateLanguage}") {
         val user = call.parameters["user"].toString()
         val language = call.parameters["language"].toString()
         val translateLanguage = call.parameters["translateLanguage"].toString()
@@ -32,7 +32,7 @@ fun Route.englishWordsRoute(translatedWordsRepository: TranslatedWordDao) {
         }
     }
 
-    get("english/random/{user}/{language}/{translateLanguage}") {
+    get("native/random/{user}/{language}/{translateLanguage}") {
         val user = call.parameters["user"].toString()
         val language = call.parameters["language"].toString()
         val translateLanguage = call.parameters["translateLanguage"].toString()
@@ -48,7 +48,7 @@ fun Route.englishWordsRoute(translatedWordsRepository: TranslatedWordDao) {
             call.respond(englishWords)
         }
     }
-    post ("english"){
+    post ("native"){
         val englishWordDraft = call.receive<NativeWordDraft>()
         val wordIsInList = nativeWordsRepository.checkNativeWord(englishWordDraft.word)
 
