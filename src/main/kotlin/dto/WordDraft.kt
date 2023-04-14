@@ -4,12 +4,10 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-data class NativeWord(
-    val id: String,
-    val translateId: String,
+data class WordDraft(
     val user: String,
     val word: String,
+    val language: String,
     val translate: String,
     val translateLanguage: String,
-    val language: String
 )

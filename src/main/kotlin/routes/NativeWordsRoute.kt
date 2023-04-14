@@ -1,9 +1,9 @@
 package routes
 
-import dao.NativeWordDao
-import dao.NativeWordDaoImpl
 import dao.TranslatedWordDao
-import dto.NativeWordDraft
+import dao.WordDao
+import dao.WordDaoImpl
+import dto.WordDraft
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -11,7 +11,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 fun Route.englishWordsRoute(translatedWordsRepository: TranslatedWordDao) {
-    val nativeWordsRepository: NativeWordDao = NativeWordDaoImpl()
+    val wordsRepository: WordDao = WordDaoImpl()
 
 
     get("native/{user}/{language}/{translateLanguage}") {
@@ -20,15 +20,15 @@ fun Route.englishWordsRoute(translatedWordsRepository: TranslatedWordDao) {
         val translateLanguage = call.parameters["translateLanguage"].toString()
 
 
-        val englishWords = nativeWordsRepository.getAllNativeWords(user, language, translateLanguage)
+        val words = wordsRepository.getAllWords(user, language, translateLanguage)
 
-        if (englishWords == null) {
+        if (words == null) {
             call.respond(
                 HttpStatusCode.NotFound,
                 "First you should add new words"
             )
         } else {
-            call.respond(englishWords)
+            call.respond(words)
         }
     }
 
@@ -37,24 +37,24 @@ fun Route.englishWordsRoute(translatedWordsRepository: TranslatedWordDao) {
         val language = call.parameters["language"].toString()
         val translateLanguage = call.parameters["translateLanguage"].toString()
 
-        val englishWords = nativeWordsRepository.getNativeWord(user, language, translateLanguage)
+        val words = wordsRepository.getWord(user, language, translateLanguage)
 
-        if (englishWords == null) {
+        if (words == null) {
             call.respond(
                 HttpStatusCode.NotFound,
                 "First you should add new words"
             )
         } else {
-            call.respond(englishWords)
+            call.respond(words)
         }
     }
     post ("native"){
-        val englishWordDraft = call.receive<NativeWordDraft>()
-        val wordIsInList = nativeWordsRepository.checkNativeWord(englishWordDraft.word)
+        val wordDraft = call.receive<WordDraft>()
+        val wordIsInList = wordsRepository.checkWord(wordDraft.word)
 
         if (wordIsInList == null) {
-            val word = nativeWordsRepository.addNativeWord(englishWordDraft)
-            translatedWordsRepository.addTranslatedWord(englishWordDraft)
+            val word = wordsRepository.addWord(wordDraft)
+            translatedWordsRepository.addTranslatedWord(wordDraft)
             call.respond(
                 HttpStatusCode.OK,
                 "word ${word.word} added to your list"

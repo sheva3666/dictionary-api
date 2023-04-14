@@ -1,6 +1,6 @@
 package dao
 
-import dto.NativeWordDraft
+import dto.WordDraft
 import dto.TranslatedWord
 
 class TranslatedWordDaoImpl: TranslatedWordDao {
@@ -25,7 +25,7 @@ class TranslatedWordDaoImpl: TranslatedWordDao {
         return translatedWords.filter {it.user == user && it.language == language}
     }
 
-    override fun addTranslatedWord(draft: NativeWordDraft): TranslatedWord {
+    override fun addTranslatedWord(draft: WordDraft): TranslatedWord {
         val translatedWord = TranslatedWord(
             id = "${draft.word}-${draft.language}-translated",
             user = draft.user,
