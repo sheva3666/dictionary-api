@@ -7,7 +7,7 @@ import dao.TranslatedWordDaoImpl
 import io.ktor.server.application.*
 import io.ktor.server.routing.*
 import routes.authRoute
-import routes.englishWordsRoute
+import routes.wordsRoute
 import routes.translatedWordsRoute
 import routes.usersRoute
 
@@ -17,7 +17,7 @@ fun Application.configureRouting() {
 
     routing {
         usersRoute(authRepository)
-        englishWordsRoute(translatedWordsRepository)
+        wordsRoute(translatedWordsRepository)
         translatedWordsRoute(translatedWordsRepository)
         authRoute(authRepository)
     }

@@ -10,11 +10,11 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Route.englishWordsRoute(translatedWordsRepository: TranslatedWordDao) {
+fun Route.wordsRoute(translatedWordsRepository: TranslatedWordDao) {
     val wordsRepository: WordDao = WordDaoImpl()
 
 
-    get("native/{user}/{language}/{translateLanguage}") {
+    get("words/{user}/{language}/{translateLanguage}") {
         val user = call.parameters["user"].toString()
         val language = call.parameters["language"].toString()
         val translateLanguage = call.parameters["translateLanguage"].toString()
@@ -32,7 +32,7 @@ fun Route.englishWordsRoute(translatedWordsRepository: TranslatedWordDao) {
         }
     }
 
-    get("native/random/{user}/{language}/{translateLanguage}") {
+    get("words/random/{user}/{language}/{translateLanguage}") {
         val user = call.parameters["user"].toString()
         val language = call.parameters["language"].toString()
         val translateLanguage = call.parameters["translateLanguage"].toString()
@@ -48,7 +48,7 @@ fun Route.englishWordsRoute(translatedWordsRepository: TranslatedWordDao) {
             call.respond(words)
         }
     }
-    post ("native"){
+    post ("words"){
         val wordDraft = call.receive<WordDraft>()
         val wordIsInList = wordsRepository.checkWord(wordDraft.word)
 
