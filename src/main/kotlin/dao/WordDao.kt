@@ -12,4 +12,6 @@ interface WordDao {
 
     fun checkWord(word: String): Word?
 
+    fun searchWords(wordsForCurrentUser: List<Word>, searchValue: String): ArrayList<Word>
+
 }

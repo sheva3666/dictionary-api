@@ -14,10 +14,13 @@ fun Route.wordsRoute(translatedWordsRepository: TranslatedWordDao) {
     val wordsRepository: WordDao = WordDaoImpl()
 
 
-    get("words/{user}/{language}/{translateLanguage}") {
+    get("words/{user}/{language}/{translateLanguage}/{search}") {
         val user = call.parameters["user"].toString()
         val language = call.parameters["language"].toString()
         val translateLanguage = call.parameters["translateLanguage"].toString()
+        val searchValue = call.parameters["search"].toString()
+
+
 
 
         val words = wordsRepository.getAllWords(user, language, translateLanguage)
@@ -28,7 +31,12 @@ fun Route.wordsRoute(translatedWordsRepository: TranslatedWordDao) {
                 "First you should add new words"
             )
         } else {
-            call.respond(words)
+            if (searchValue == "empty") {
+                call.respond(words)
+            } else{
+                val searchedWords = wordsRepository.searchWords(words, searchValue)
+                call.respond(searchedWords)
+            }
         }
     }
 

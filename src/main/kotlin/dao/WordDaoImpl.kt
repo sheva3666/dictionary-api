@@ -35,4 +35,11 @@ class WordDaoImpl: WordDao {
     override fun checkWord(word: String): Word? {
         return words.firstOrNull {it.word == word}
     }
+
+    override fun searchWords(wordsForCurrentUser: List<Word>, searchValue: String): ArrayList<Word> {
+        var returnList = ArrayList<Word>()
+        wordsForCurrentUser.filter {it.word.contains(searchValue) || it.translate.contains(searchValue)}.map {
+            returnList.add(it)}
+        return returnList
+    }
 }

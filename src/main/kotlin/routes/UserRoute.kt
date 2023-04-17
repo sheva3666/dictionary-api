@@ -17,7 +17,6 @@ fun Route.usersRoute(authRepository: AuthDao) {
         val id = call.parameters["id"].toString()
         val password = call.parameters["password"].toString()
 
-
         val user = userRepository.getUser(id, password)
 
         if (user == null) {
@@ -54,7 +53,7 @@ fun Route.usersRoute(authRepository: AuthDao) {
 
         val updated = userRepository.updateUser(userId, userDraft)
         if (updated) {
-            call.respond(HttpStatusCode.OK)
+            call.respond(HttpStatusCode.OK, "You profile updated")
         } else {
             call.respond(
                 HttpStatusCode.NotFound,
