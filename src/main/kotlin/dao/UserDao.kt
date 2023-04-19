@@ -1,14 +1,15 @@
 package dao
 
 import dto.User
-import dto.UserDraft
+import jooq.generated.tables.records.TUserRecord
+import java.util.*
 
 interface UserDao {
-    fun getUser(id: String, password: String): User?
+    fun create(newUser: TUserRecord): User
 
-    fun checkUser(id: String): User?
+    fun getByEmail(tenantId: UUID, email: String): User?
 
-    fun addUser(draft: UserDraft): User
+    fun update(updatedUser: TUserRecord): User
 
-    fun updateUser(id: String, draft: UserDraft): Boolean
+    fun login(tenantId: UUID, email: String, password: String): User?
 }

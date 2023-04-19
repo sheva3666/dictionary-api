@@ -5,5 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Auth(
-    val user: String,
+    val userEmail: String,
+    val userAuth: Boolean,
 )

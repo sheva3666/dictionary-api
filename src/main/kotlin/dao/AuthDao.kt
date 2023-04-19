@@ -1,11 +1,13 @@
 package dao
 
 import dto.Auth
+import jooq.generated.tables.records.TAuthRecord
+import java.util.*
 
 interface AuthDao {
-    fun getAuth(id: String): Auth?
+    fun get(tenantId: UUID, authEmail: String): Auth?
 
-    fun addAuth(email: String): Auth
+    fun add(auth: TAuthRecord): Auth
 
-    fun removeAuth(user: String): Boolean
+    fun update(authRecord: TAuthRecord): Auth
 }

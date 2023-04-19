@@ -1,39 +1,41 @@
 package routes
 
-import dao.AuthDao
+import dto.Auth
+import exception.UserNotFoundException
+import exception.UserWithGivenEmailAlreadyExistsException
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import services.AuthServiceImpl
+import utils.getDashedTenantId
 
-fun Route.authRoute(authRepository: AuthDao) {
+fun Route.authRoute() {
+    val authService = AuthServiceImpl()
 
-    get("auth/{user}") {
-        val user = call.parameters["user"].toString()
+    get("auth") {
+        val requestBody = call.receive<Auth>()
+        val tenantId = getDashedTenantId(call.request.header("authorization")!!)
 
-
-        val isAuth = authRepository.getAuth(user)
-
-        if (isAuth == null) {
-            call.respond(
-                HttpStatusCode.NotFound,
-                "You should login first"
-            )
-        } else {
-            call.respond(isAuth)
+        try {
+            call.respond(authService.getAuth(tenantId, requestBody))
+        } catch (e: UserNotFoundException) {
+            call.respond(HttpStatusCode.NotFound, e.message.toString())
         }
     }
 
-    delete("auth/{user}") {
-        val user = call.parameters["user"].toString()
+    put("auth/{userEmail}") {
+        val updatedAuth = call.receive<Auth>()
+        val tenantId = getDashedTenantId(call.request.header("authorization")!!)
 
-        val removed = authRepository.removeAuth(user)
-        if (removed) {
-            call.respond(HttpStatusCode.OK)
-        } else {
-            call.respond(
-                HttpStatusCode.NotFound,
-                "found no todo with the id $user")
+        try {
+            call.respond(authService.updateAuth(tenantId, updatedAuth))
+        } catch (e: UserNotFoundException) {
+            call.respond(HttpStatusCode.NotFound, e.message.toString())
+        } catch (e: UserWithGivenEmailAlreadyExistsException) {
+            call.respond(HttpStatusCode.Conflict, e.message.toString())
         }
     }
+
 }
