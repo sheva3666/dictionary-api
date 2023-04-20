@@ -26,11 +26,11 @@ fun Route.usersRoute() {
         }
 
          put("users/{id}") {
-             val requestBody = call.receive<User>()
+             val updatedUser = call.receive<User>()
              val tenantId = getDashedTenantId(call.request.header("authorization")!!)
 
             try {
-                call.respond(userService.updateUser(tenantId, requestBody))
+                call.respond(userService.updateUser(tenantId, updatedUser))
             } catch (e: UserNotFoundException) {
                 call.respond(HttpStatusCode.NotFound, e.message.toString())
             } catch (e: UserWithGivenEmailAlreadyExistsException) {

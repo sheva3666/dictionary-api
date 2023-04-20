@@ -63,6 +63,10 @@ class UserServiceImpl: UserService {
 
         )
 
+        if (authDao.get(tenantId, email) !== null) {
+            return authDao.update(authRecord)
+        }
+
         return authDao.add(authRecord)
     }
 
