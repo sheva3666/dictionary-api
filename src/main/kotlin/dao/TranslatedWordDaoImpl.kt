@@ -1,39 +1,52 @@
 package dao
 
-import dto.WordDraft
+import com.example.dslContext
 import dto.TranslatedWord
+import exception.CreateUserException
+import exception.GetUserListException
+import jooq.generated.tables.records.TTranslatedWordsRecord
+import jooq.generated.tables.references.T_TRANSLATED_WORDS
+import org.jooq.impl.DSL
+import java.util.*
 
 class TranslatedWordDaoImpl: TranslatedWordDao {
-    private val translatedWords = mutableListOf<TranslatedWord>(
-        TranslatedWord("mother-english-translated", "admin", "мама", "ukrainian",),
-        TranslatedWord("father-english-translated", "admin", "тато", "ukrainian",),
-        TranslatedWord("water-english-translated", "admin", "вода", "ukrainian",),
-        TranslatedWord("fire-english-translated", "admin", "вогонь", "ukrainian",),
-    )
-    override fun getTranslatedWord(id: String, user: String): TranslatedWord? {
-        return translatedWords.firstOrNull {it.id == id && it.user == user}
+    override fun getRandomTranslatedWords(tenantId: UUID, language: String): List<TranslatedWord> {
+        try {
+            return dslContext.select(DSL.asterisk()).from(T_TRANSLATED_WORDS).where(T_TRANSLATED_WORDS.C_TENANT_ID.equal(tenantId))
+                .and(T_TRANSLATED_WORDS.C_LANGUAGE.equal(language))
+                .fetchInto(T_TRANSLATED_WORDS)
+                .toList()
+                .map { convertToTranslatedWord(it) }
+        } catch (e: Exception) {
+            throw GetUserListException("Unable to get list of translated words. Exception: $e")
+        }
     }
 
-    override fun getRandomTranslatedWords(language: String): List<TranslatedWord> {
-        return listOf<TranslatedWord>(
-            translatedWords.random(),
-            translatedWords.random(),
-        )
+    override fun addTranslatedWord(newWord: TTranslatedWordsRecord): TranslatedWord {
+        try {
+            val newRecord = dslContext.newRecord(T_TRANSLATED_WORDS)
+            with(newRecord) {
+                cUser = newWord.cUser
+                cWord = newWord.cWord
+                cLanguage = newWord.cLanguage
+                cTenantId = newWord.cTenantId
+                store()
+            }
+
+            return convertToTranslatedWord(newRecord)
+        } catch (e: Exception) {
+            throw CreateUserException("Unable to create word. Exception: $e")
+        }
+    }
     }
 
-    override fun getAllTranslatedWords(user: String, language: String): List<TranslatedWord> {
-        return translatedWords.filter {it.user == user && it.language == language}
+    private fun convertToTranslatedWord(record: TTranslatedWordsRecord): TranslatedWord {
+        with(record) {
+            return TranslatedWord(
+                id = cId!!,
+                user = cUser!!,
+                word = cWord!!,
+                language = cLanguage!!,
+            )
+        }
     }
-
-    override fun addTranslatedWord(draft: WordDraft): TranslatedWord {
-        val translatedWord = TranslatedWord(
-            id = "${draft.word}-${draft.language}-translated",
-            user = draft.user,
-            word = draft.translate,
-            language = draft.translateLanguage,
-
-        )
-        translatedWords.add(translatedWord)
-        return translatedWord
-    }
-}

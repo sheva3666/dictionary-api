@@ -40,22 +40,25 @@ fun Route.wordsRoute() {
         }
     }
 
-//    get("words/random/{user}/{language}/{translateLanguage}") {
-//        val user = call.parameters["user"].toString()
-//        val language = call.parameters["language"].toString()
-//        val translateLanguage = call.parameters["translateLanguage"].toString()
-//
-//        val words = wordsRepository.getWord(user, language, translateLanguage)
-//
-//        if (words == null) {
-//            call.respond(
-//                HttpStatusCode.NotFound,
-//                "First you should add new words"
-//            )
-//        } else {
-//            call.respond(words)
-//        }
-//    }
+    // I have to implement functionality ro get random word for user
+
+    //    get("words/random/{user}/{language}/{translateLanguage}") {
+    //        val user = call.parameters["user"].toString()
+    //        val language = call.parameters["language"].toString()
+    //        val translateLanguage = call.parameters["translateLanguage"].toString()
+    //
+    //        val words = wordsRepository.getWord(user, language, translateLanguage)
+    //
+    //        if (words == null) {
+    //            call.respond(
+    //                HttpStatusCode.NotFound,
+    //                "First you should add new words"
+    //            )
+    //        } else {
+    //            call.respond(words)
+    //        }
+    //    }
+
     post ("words"){
         val newWord = call.receive<WordDraft>()
         val tenantId = getDashedTenantId(call.request.header("authorization")!!)

@@ -1,14 +1,18 @@
 package services
 
+import dao.TranslatedWordDaoImpl
 import dao.WordDaoImpl
 import dto.Word
 import dto.WordDraft
 import exception.UserWithGivenEmailAlreadyExistsException
+import jooq.generated.tables.records.TTranslatedWordsRecord
 import jooq.generated.tables.records.TWordsRecord
 import java.util.*
 
 class WordServiceImpl: WordService {
     private val wordDao = WordDaoImpl()
+    private val translatedWordDao = TranslatedWordDaoImpl()
+
     override fun getAllWords(tenantId: UUID, user: String, language: String, translateLanguage: String): List<Word> {
         return wordDao.getAll(tenantId, user, language, translateLanguage)
     }
@@ -21,6 +25,18 @@ class WordServiceImpl: WordService {
         if (wordDao.check(tenantId, newWord.word) != null) {
             throw UserWithGivenEmailAlreadyExistsException("Word: ${newWord.word} already exists.")
         }
+
+        val translatedWord = TTranslatedWordsRecord(
+            cTenantId = tenantId,
+            cUser = newWord.user,
+            cWord = newWord.translate,
+            cLanguage = newWord.translateLanguage,
+
+        )
+
+        translatedWordDao.addTranslatedWord(translatedWord)
+
+
 
         val wordRecord = TWordsRecord(
             cTenantId = tenantId,

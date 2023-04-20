@@ -1,35 +1,21 @@
 package routes
 
-import dao.TranslatedWordDao
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import services.TranslatedWordsServiceImpl
+import utils.getDashedTenantId
 
-fun Route.translatedWordsRoute(translatedWordsRepository: TranslatedWordDao) {
-//    val translatedWordsRepository: TranslatedWordDao = TranslatedWordDaoImpl()
-
-
-    get("translate/{user}/{language}") {
-        val user = call.parameters["user"].toString()
-        val language = call.parameters["language"].toString()
-
-        val translatedWords = translatedWordsRepository.getAllTranslatedWords(user, language)
-
-        if (translatedWords == null) {
-            call.respond(
-                HttpStatusCode.NotFound,
-                "First you should add new words"
-            )
-        } else {
-            call.respond(translatedWords)
-        }
-    }
+fun Route.translatedWordsRoute() {
+    val translatedWordsService = TranslatedWordsServiceImpl()
 
     get("translate/{language}") {
         val language = call.parameters["language"].toString()
+        val tenantId = getDashedTenantId(call.request.header("authorization")!!)
 
-        val translatedWords = translatedWordsRepository.getRandomTranslatedWords(language)
+        val translatedWords = translatedWordsService.getRandomTranslatedWords(tenantId, language)
 
         if (translatedWords == null) {
             call.respond(
