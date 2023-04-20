@@ -1,17 +1,13 @@
 package dao
 
 import dto.Word
-import dto.WordDraft
+import jooq.generated.tables.records.TWordsRecord
+import java.util.*
 
 interface WordDao {
-    fun getAllWords(user: String, language: String, translateLanguage: String): List<Word>
+    fun getAll(tenantId: UUID, user: String, language: String, translateLanguage: String): List<Word>
 
-    fun getWord(user: String, language: String, translateLanguage: String): Word
+    fun create(newWord: TWordsRecord): Word
 
-    fun addWord(draft: WordDraft): Word
-
-    fun checkWord(word: String): Word?
-
-    fun searchWords(wordsForCurrentUser: List<Word>, searchValue: String): ArrayList<Word>
-
+    fun check(tenantId: UUID, word: String): Word?
 }

@@ -16,7 +16,7 @@ fun Application.configureRouting() {
     routing {
         authenticate {
             usersRoute()
-            wordsRoute(translatedWordsRepository)
+            wordsRoute()
             translatedWordsRoute(translatedWordsRepository)
             authRoute()
         }

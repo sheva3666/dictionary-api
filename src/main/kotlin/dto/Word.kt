@@ -1,12 +1,13 @@
 package dto
 
 import kotlinx.serialization.Serializable
+import java.util.*
 
 
 @Serializable
 data class Word(
-    val id: String,
-    val translateId: String,
+    @Serializable(with = serializer.UUIDSerializer::class)
+    val id: UUID,
     val user: String,
     val word: String,
     val translate: String,
