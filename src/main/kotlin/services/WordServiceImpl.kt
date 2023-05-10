@@ -18,7 +18,8 @@ class WordServiceImpl: WordService {
     }
 
     override fun getWord(tenantId: UUID, user: String, language: String, translateLanguage: String): Word {
-        TODO("Not yet implemented")
+        val wordsFotUser = wordDao.getAll(tenantId, user, language, translateLanguage)
+        return wordsFotUser.random()
     }
 
     override fun addWord(tenantId: UUID, newWord: WordDraft): Word {
@@ -55,7 +56,11 @@ class WordServiceImpl: WordService {
         TODO("Not yet implemented")
     }
 
-    override fun searchWords(tenantId: UUID, wordsForCurrentUser: List<Word>, searchValue: String): ArrayList<Word> {
-        TODO("Not yet implemented")
+    override fun searchWords(tenantId: UUID, user: String, language: String, translateLanguage: String, searchValue: String): ArrayList<Word> {
+        var words = wordDao.getAll(tenantId, user, language, translateLanguage)
+        var returnList = ArrayList<Word>()
+        words.filter {it.word.contains(searchValue) || it.translate.contains(searchValue)}.map {
+            returnList.add(it)}
+        return returnList
     }
 }

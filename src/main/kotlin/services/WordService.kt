@@ -13,5 +13,5 @@ interface WordService {
 
     fun checkWord(tenantId: UUID, word: String): Word?
 
-    fun searchWords(tenantId: UUID, wordsForCurrentUser: List<Word>, searchValue: String): ArrayList<Word>
+    fun searchWords(tenantId: UUID, user: String, language: String, translateLanguage: String, searchValue: String): ArrayList<Word>
 }
