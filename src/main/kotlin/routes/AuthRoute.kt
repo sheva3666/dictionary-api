@@ -14,12 +14,12 @@ import utils.getDashedTenantId
 fun Route.authRoute() {
     val authService = AuthServiceImpl()
 
-    get("auth") {
-        val requestBody = call.receive<Auth>()
+    get("auth/{userEmail}") {
+        val userEmail = call.parameters["userEmail"].toString()
         val tenantId = getDashedTenantId(call.request.header("authorization")!!)
 
         try {
-            call.respond(authService.getAuth(tenantId, requestBody))
+            call.respond(authService.getAuth(tenantId, userEmail))
         } catch (e: UserNotFoundException) {
             call.respond(HttpStatusCode.NotFound, e.message.toString())
         }

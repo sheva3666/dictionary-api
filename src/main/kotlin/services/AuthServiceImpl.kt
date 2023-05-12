@@ -8,9 +8,9 @@ import java.util.*
 
 class AuthServiceImpl: AuthService {
     private val authDao = AuthDaoImpl()
-    override fun getAuth(tenantId: UUID, updatedAuth: Auth): Auth {
-        return authDao.get(tenantId, updatedAuth.userEmail)?:
-            throw UserWithGivenEmailAlreadyExistsException("Dear: ${updatedAuth.userEmail} please first you should login.")
+    override fun getAuth(tenantId: UUID, userEmail: String): Auth {
+        return authDao.get(tenantId, userEmail)?:
+            throw UserWithGivenEmailAlreadyExistsException("Dear: $userEmail please first you should login.")
     }
 
     override fun updateAuth(tenantId: UUID, updatedAuth: Auth): Auth {

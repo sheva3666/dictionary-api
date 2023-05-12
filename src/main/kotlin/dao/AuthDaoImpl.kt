@@ -12,12 +12,12 @@ import java.util.*
 
 
 class AuthDaoImpl: AuthDao {
-    override fun get(tenantId: UUID, authEmail: String): Auth? {
+    override fun get(tenantId: UUID, userEmail: String): Auth? {
         try {
             with(T_AUTH) {
                 val auth =
                     dslContext.select(DSL.asterisk()).from(T_AUTH).where(C_TENANT_ID.equal(tenantId))
-                        .and(C_USER_EMAIL.equal(authEmail)).fetchOneInto(
+                        .and(C_USER_EMAIL.equal(userEmail)).fetchOneInto(
                             T_AUTH
                         ) ?: return null
 
