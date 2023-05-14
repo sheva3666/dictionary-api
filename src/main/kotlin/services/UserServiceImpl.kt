@@ -52,15 +52,16 @@ class UserServiceImpl: UserService {
     }
 
     override fun loginUser(tenantId: UUID, email: String, password: String): Auth {
-        if (userDao.login(tenantId, email, password) == null) {
-            throw UserWithGivenEmailAlreadyExistsException("User email or password is invalid.")
-        }
+        val authUser = userDao.login(tenantId, email, password)
+            ?: throw UserWithGivenEmailAlreadyExistsException("User email or password is invalid.")
+
 
         val authRecord = TAuthRecord(
             cUserEmail = email,
             cTenantId = tenantId,
             cUserAuth = true,
-
+            cLanguage = authUser.language,
+            cLanguageForLearn = authUser.languageForLearn
         )
 
         if (authDao.get(tenantId, email) !== null) {

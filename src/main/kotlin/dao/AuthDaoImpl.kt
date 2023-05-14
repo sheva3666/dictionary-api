@@ -36,6 +36,8 @@ class AuthDaoImpl: AuthDao {
                 cUserEmail = authRecord.cUserEmail
                 cTenantId = authRecord.cTenantId
                 cUserAuth = authRecord.cUserAuth
+                cLanguage = authRecord.cLanguage
+                cLanguageForLearn = authRecord.cLanguageForLearn
                 store()
             }
             return convertToAuth(newRecord)
@@ -56,6 +58,8 @@ class AuthDaoImpl: AuthDao {
                 with(record) {
                     cUserEmail = authRecord.cUserEmail
                     cUserAuth = authRecord.cUserAuth
+                    cLanguage = authRecord.cLanguage
+                    cLanguageForLearn = authRecord.cLanguageForLearn
                     update()
                 }
                 return convertToAuth(record)
@@ -70,6 +74,9 @@ class AuthDaoImpl: AuthDao {
             return Auth(
                 userEmail = cUserEmail!!,
                 userAuth = cUserAuth!!,
+                language = cLanguage!!,
+                languageForLearn = cLanguageForLearn!!
+
             )
         }
     }
