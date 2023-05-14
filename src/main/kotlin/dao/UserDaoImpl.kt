@@ -16,7 +16,6 @@ class UserDaoImpl: UserDao {
             val newRecord = dslContext.newRecord(T_USER)
             with(newRecord) {
                 cUserEmail = newUser.cUserEmail
-                cUserName = newUser.cUserName
                 cUserPassword = newUser.cUserPassword
                 cUserLanguage = newUser.cUserLanguage
                 cUserLanguageForLearn = newUser.cUserLanguageForLearn
@@ -58,7 +57,6 @@ class UserDaoImpl: UserDao {
 
                 with(record) {
                     cUserEmail = updatedUser.cUserEmail
-                    cUserName = updatedUser.cUserName
                     cUserPassword = updatedUser.cUserPassword
                     cUserLanguage = updatedUser.cUserLanguage
                     cUserLanguageForLearn = updatedUser.cUserLanguageForLearn
@@ -94,7 +92,6 @@ class UserDaoImpl: UserDao {
         with(record) {
             return User(
                 id = cId!!,
-                name = cUserName!!,
                 email = cUserEmail!!,
                 password = cUserPassword!!,
                 language = cUserLanguage!!,

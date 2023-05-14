@@ -23,7 +23,6 @@ class UserServiceImpl: UserService {
             cTenantId = tenantId,
             cUserEmail = user.email,
             cUserPassword = user.password,
-            cUserName = user.name,
             cUserLanguage = user.language,
             cUserLanguageForLearn = user.languageForLearn
         )
@@ -42,7 +41,6 @@ class UserServiceImpl: UserService {
             cTenantId = tenantId,
             cUserEmail = updatedUser.email,
             cUserPassword = updatedUser.password,
-            cUserName = updatedUser.name,
             cUserLanguage = updatedUser.language,
             cUserLanguageForLearn = updatedUser.languageForLearn
 
