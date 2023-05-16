@@ -37,16 +37,4 @@ fun Route.usersRoute() {
                 call.respond(HttpStatusCode.Conflict, e.message.toString())
             }
         }
-
-        get("users/{email}/{password}") {
-            val email = call.parameters["email"].toString()
-            val password = call.parameters["password"].toString()
-            val tenantId = getDashedTenantId(call.request.header("authorization")!!)
-
-            try {
-                call.respond(userService.loginUser(tenantId, email, password))
-            } catch (e: UserNotFoundException) {
-                call.respond(HttpStatusCode.NotFound, e.message.toString())
-            }
-        }
 }

@@ -2,11 +2,9 @@ package services
 
 import dao.AuthDaoImpl
 import dao.UserDaoImpl
-import dto.Auth
 import dto.User
 import dto.UserDraft
 import exception.UserWithGivenEmailAlreadyExistsException
-import jooq.generated.tables.records.TAuthRecord
 import jooq.generated.tables.records.TUserRecord
 import java.util.*
 
@@ -14,7 +12,7 @@ class UserServiceImpl: UserService {
     private val userDao = UserDaoImpl()
     private val authDao = AuthDaoImpl()
 
-    override fun createUser(tenantId: UUID, user: UserDraft): User {
+    override fun createUser(tenantId: UUID, user: UserDraft): String {
         if (userDao.getByEmail(tenantId, user.email) != null) {
             throw UserWithGivenEmailAlreadyExistsException("User with given email: ${user.email} already exists.")
         }
@@ -27,7 +25,11 @@ class UserServiceImpl: UserService {
             cUserLanguageForLearn = user.languageForLearn
         )
 
-        return userDao.create(userRecord)
+        userDao.create(userRecord)
+
+        return "User with email: ${userRecord.cUserEmail} successfully created"
+
+
     }
 
     override fun updateUser(tenantId: UUID, updatedUser: User): User {
@@ -48,25 +50,4 @@ class UserServiceImpl: UserService {
 
         return userDao.update(userRecord)
     }
-
-    override fun loginUser(tenantId: UUID, email: String, password: String): Auth {
-        val authUser = userDao.login(tenantId, email, password)
-            ?: throw UserWithGivenEmailAlreadyExistsException("User email or password is invalid.")
-
-
-        val authRecord = TAuthRecord(
-            cUserEmail = email,
-            cTenantId = tenantId,
-            cUserAuth = true,
-            cLanguage = authUser.language,
-            cLanguageForLearn = authUser.languageForLearn
-        )
-
-        if (authDao.get(tenantId, email) !== null) {
-            return authDao.update(authRecord)
-        }
-
-        return authDao.add(authRecord)
-    }
-
 }

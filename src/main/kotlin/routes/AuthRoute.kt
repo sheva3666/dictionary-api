@@ -38,4 +38,16 @@ fun Route.authRoute() {
         }
     }
 
+    post("auth/{userEmail}/{password}") {
+        val email = call.parameters["userEmail"].toString()
+        val password = call.parameters["password"].toString()
+        val tenantId = getDashedTenantId(call.request.header("authorization")!!)
+
+        try {
+            call.respond(authService.loginUser(tenantId, email, password))
+        } catch (e: UserNotFoundException) {
+            call.respond(HttpStatusCode.NotFound, e.message.toString())
+        }
+    }
+
 }
