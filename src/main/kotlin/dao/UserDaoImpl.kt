@@ -52,7 +52,7 @@ class UserDaoImpl: UserDao {
                 val record = dslContext.select(asterisk())
                     .from(T_USER)
                     .where(C_TENANT_ID.equal(updatedUser.cTenantId))
-                    .and(C_ID.equal(updatedUser.cId))
+                    .and(C_USER_EMAIL.equal(updatedUser.cUserEmail))
                     .fetchOneInto(T_USER)!!
 
                 with(record) {

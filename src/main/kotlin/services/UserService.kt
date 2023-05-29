@@ -7,6 +7,6 @@ import java.util.*
 interface UserService {
     fun createUser(tenantId: UUID, user: UserDraft): String
 
-    fun updateUser(tenantId: UUID, updatedUser: User): User
+    fun updateUser(tenantId: UUID, updatedUser: UserDraft): User
 
 }

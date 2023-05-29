@@ -1,6 +1,5 @@
 package routes
 
-import dto.User
 import dto.UserDraft
 import exception.UserNotFoundException
 import exception.UserWithGivenEmailAlreadyExistsException
@@ -25,8 +24,8 @@ fun Route.usersRoute() {
             }
         }
 
-         put("users/{id}") {
-             val updatedUser = call.receive<User>()
+         put("users/{email}") {
+             val updatedUser = call.receive<UserDraft>()
              val tenantId = getDashedTenantId(call.request.header("authorization")!!)
 
             try {

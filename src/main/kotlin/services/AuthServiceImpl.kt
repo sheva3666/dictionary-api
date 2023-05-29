@@ -13,8 +13,8 @@ class AuthServiceImpl: AuthService {
     private val userDao = UserDaoImpl()
 
     override fun getAuth(tenantId: UUID, userEmail: String): Auth {
-        return authDao.get(tenantId, userEmail)?:
-            throw UserWithGivenEmailAlreadyExistsException("Dear: $userEmail please first you should login.")
+        return authDao.get(tenantId, userEmail)
+            ?: throw UserNotFoundException("Dear: $userEmail please first you should login.")
     }
 
     override fun updateAuth(tenantId: UUID, updatedAuth: Auth): Auth {
@@ -26,6 +26,8 @@ class AuthServiceImpl: AuthService {
             cTenantId = tenantId,
             cUserEmail = updatedAuth.userEmail,
             cUserAuth = updatedAuth.userAuth,
+            cLanguage = updatedAuth.language,
+            cLanguageForLearn = updatedAuth.languageForLearn
         )
 
         return authDao.update(authRecord)

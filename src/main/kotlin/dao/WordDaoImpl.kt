@@ -21,6 +21,7 @@ class WordDaoImpl: WordDao {
     override fun getAll(tenantId: UUID, user: String, language: String, translateLanguage: String): List<Word> {
         try {
             return dslContext.select(asterisk()).from(T_WORDS).where(T_WORDS.C_TENANT_ID.equal(tenantId))
+                .and(T_WORDS.C_USER.equal(user))
                 .and(T_WORDS.C_LANGUAGE.equal(language))
                 .and(T_WORDS.C_TRANSLATE_LANGUAGE.equal(translateLanguage))
                 .fetchInto(T_WORDS)
