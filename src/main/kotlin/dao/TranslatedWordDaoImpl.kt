@@ -7,13 +7,14 @@ import exception.GetUserListException
 import jooq.generated.tables.records.TTranslatedWordsRecord
 import jooq.generated.tables.references.T_TRANSLATED_WORDS
 import org.jooq.impl.DSL
+import org.jooq.impl.DSL.rand
 import java.util.*
 
 class TranslatedWordDaoImpl: TranslatedWordDao {
     override fun getRandomTranslatedWords(tenantId: UUID, language: String): List<TranslatedWord> {
         try {
             return dslContext.select(DSL.asterisk()).from(T_TRANSLATED_WORDS).where(T_TRANSLATED_WORDS.C_TENANT_ID.equal(tenantId))
-                .and(T_TRANSLATED_WORDS.C_LANGUAGE.equal(language))
+                .and(T_TRANSLATED_WORDS.C_LANGUAGE.equal(language)).orderBy(rand()).limit(2)
                 .fetchInto(T_TRANSLATED_WORDS)
                 .toList()
                 .map { convertToTranslatedWord(it) }

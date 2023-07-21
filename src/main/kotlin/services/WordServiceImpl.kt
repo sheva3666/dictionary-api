@@ -4,6 +4,7 @@ import dao.TranslatedWordDaoImpl
 import dao.WordDaoImpl
 import dto.Word
 import dto.WordDraft
+import dto.WordsDataResponse
 import exception.UserWithGivenEmailAlreadyExistsException
 import jooq.generated.tables.records.TTranslatedWordsRecord
 import jooq.generated.tables.records.TWordsRecord
@@ -13,13 +14,40 @@ class WordServiceImpl: WordService {
     private val wordDao = WordDaoImpl()
     private val translatedWordDao = TranslatedWordDaoImpl()
 
-    override fun getAllWords(tenantId: UUID, user: String, language: String, translateLanguage: String): List<Word> {
-        return wordDao.getAll(tenantId, user, language, translateLanguage)
+    override fun getAllWordsWithSearch(tenantId: UUID, user: String, language: String, translateLanguage: String, searchInput: String, page: Int?): WordsDataResponse {
+        val currentPage = if (page == 1) {
+            1
+        } else {
+            page?.minus(1)?.times(10)
+        }
+
+    val words = wordDao.getAllWithSearch(tenantId, user, language, translateLanguage, searchInput, currentPage)
+        return WordsDataResponse(
+            words,
+            words.size / 10 + 1,
+            page
+        )
+
+    }
+
+    override fun getAllWords(tenantId: UUID, user: String, language: String, translateLanguage: String, page: Int?): WordsDataResponse {
+        val currentPage = if (page == 1) {
+             1
+        } else {
+            page?.minus(1)?.times(10)
+        }
+
+        val length = wordDao.getLengthOfWords(tenantId, user, language, translateLanguage) / 10
+        return WordsDataResponse(
+            wordDao.getAll(tenantId, user, language, translateLanguage, currentPage),
+            length + 1,
+            page
+        )
     }
 
     override fun getWord(tenantId: UUID, user: String, language: String, translateLanguage: String): Word {
-        val wordsFotUser = wordDao.getAll(tenantId, user, language, translateLanguage)
-        return wordsFotUser.random()
+        val wordsFotUser = wordDao.getRandomWord (tenantId, user, language, translateLanguage)
+        return wordsFotUser[0]
     }
 
     override fun addWord(tenantId: UUID, newWord: WordDraft): Word {
@@ -50,17 +78,5 @@ class WordServiceImpl: WordService {
         )
 
         return wordDao.create(wordRecord)
-    }
-
-    override fun checkWord(tenantId: UUID, word: String): Word? {
-        TODO("Not yet implemented")
-    }
-
-    override fun searchWords(tenantId: UUID, user: String, language: String, translateLanguage: String, searchValue: String): ArrayList<Word> {
-        var words = wordDao.getAll(tenantId, user, language, translateLanguage)
-        var returnList = ArrayList<Word>()
-        words.filter {it.word.contains(searchValue) || it.translate.contains(searchValue)}.map {
-            returnList.add(it)}
-        return returnList
     }
 }

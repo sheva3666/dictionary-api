@@ -6,11 +6,8 @@ import java.util.*
 
 class TranslatedWordsServiceImpl: TranslatedWordsService {
     private val translatedWordDao = TranslatedWordDaoImpl()
+
     override fun getRandomTranslatedWords(tenantId: UUID, language: String): List<TranslatedWord> {
-        val listOfWords = translatedWordDao.getRandomTranslatedWords(tenantId, language)
-        return listOf<TranslatedWord>(
-            listOfWords.random(),
-            listOfWords.random()
-        )
+        return translatedWordDao.getRandomTranslatedWords(tenantId, language)
     }
 }

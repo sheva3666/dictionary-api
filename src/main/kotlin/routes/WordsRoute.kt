@@ -13,28 +13,30 @@ import utils.getDashedTenantId
 fun Route.wordsRoute() {
     val wordService = WordServiceImpl()
 
-    get("words/{user}/{language}/{translateLanguage}/{search}") {
+    get("words/{user}/{language}/{translateLanguage}/{page}/{search}") {
         val user = call.parameters["user"].toString()
         val language = call.parameters["language"].toString()
         val translateLanguage = call.parameters["translateLanguage"].toString()
-        val searchValue = call.parameters["search"].toString()
+        val searchInput = call.parameters["search"].toString()
+        val page = call.parameters["page"]?.toIntOrNull()
         val tenantId = getDashedTenantId(call.request.header("authorization")!!)
 
-        val words = wordService.getAllWords(tenantId, user, language, translateLanguage)
+        if (searchInput == "null") {
+            val words = wordService.getAllWords(tenantId, user, language, translateLanguage, page)
 
-        if (words == null) {
-            call.respond(
-                HttpStatusCode.NotFound,
-                "First you should add new words"
-            )
-        } else {
-            if (searchValue == "null") {
-                call.respond(words)
+            if (words.words.size == 0) {
+                call.respond(
+                    HttpStatusCode.NotFound,
+                    "First you should add new words"
+                )
             } else{
-                val searchedWords = wordService.searchWords(tenantId, user, language, translateLanguage, searchValue)
-                call.respond(searchedWords)
+                call.respond(words)
             }
+        } else {
+            val searchedWords = wordService.getAllWordsWithSearch(tenantId, user, language, translateLanguage, searchInput, page)
+            call.respond(searchedWords)
         }
+
     }
 
     get("words/random/{user}/{language}/{translateLanguage}") {
