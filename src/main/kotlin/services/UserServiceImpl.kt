@@ -2,16 +2,19 @@ package services
 
 import dao.AuthDaoImpl
 import dao.UserDaoImpl
+import dao.UserScoreDaoImpl
 import dto.User
 import dto.UserDraft
 import exception.UserWithGivenEmailAlreadyExistsException
 import jooq.generated.tables.records.TAuthRecord
 import jooq.generated.tables.records.TUserRecord
+import jooq.generated.tables.records.TUserScoreRecord
 import java.util.*
 
 class UserServiceImpl: UserService {
     private val userDao = UserDaoImpl()
     private val authDao = AuthDaoImpl()
+    private val userScoreDao = UserScoreDaoImpl()
 
 
     override fun createUser(tenantId: UUID, user: UserDraft): String {
@@ -27,6 +30,13 @@ class UserServiceImpl: UserService {
             cUserLanguageForLearn = user.languageForLearn
         )
 
+        val userScoreRecord = TUserScoreRecord(
+            cTenantId = tenantId,
+            cUserEmail = user.email,
+            cScore = 0
+        )
+
+        userScoreDao.add(userScoreRecord)
         userDao.create(userRecord)
 
         return "User with email: ${userRecord.cUserEmail} successfully created"
