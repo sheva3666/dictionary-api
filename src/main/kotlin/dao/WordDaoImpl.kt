@@ -19,7 +19,7 @@ class WordDaoImpl: WordDao {
                 .and(T_WORDS.C_USER.equal(user))
                 .and(T_WORDS.C_LANGUAGE.equal(language))
                 .and(T_WORDS.C_TRANSLATE_LANGUAGE.equal(translateLanguage))
-                .and(T_WORDS.C_WORD.contains(searchInput)).or(T_WORDS.C_TRANSLATE.contains(searchInput))
+                .and(T_WORDS.C_WORD.like("%$searchInput%").or(T_WORDS.C_TRANSLATE.like("%$searchInput%")))
                 .orderBy(T_WORDS.C_WORD.desc()).limit(page, 10)
                 .fetchInto(T_WORDS)
                 .toList()
@@ -89,12 +89,14 @@ class WordDaoImpl: WordDao {
         }
     }
 
-    override fun check(tenantId: UUID, word: String): Word? {
+    override fun check(tenantId: UUID, word: String, translate: String): Word? {
         try {
             with(T_WORDS) {
                 val word =
                     dslContext.select(DSL.asterisk()).from(T_WORDS).where(C_TENANT_ID.equal(tenantId))
-                        .and(C_WORD.equal(word)).fetchOneInto(
+                        .and(C_WORD.equal(word))
+                        .and(C_TRANSLATE.equal(translate))
+                        .fetchOneInto(
                             T_WORDS
                         ) ?: return null
 

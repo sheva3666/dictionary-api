@@ -15,5 +15,5 @@ interface WordDao {
 
     fun create(newWord: TWordsRecord): Word
 
-    fun check(tenantId: UUID, word: String): Word?
+    fun check(tenantId: UUID, word: String, translate: String): Word?
 }

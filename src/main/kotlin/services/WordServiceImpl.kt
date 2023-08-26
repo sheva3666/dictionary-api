@@ -16,7 +16,7 @@ class WordServiceImpl: WordService {
 
     override fun getAllWordsWithSearch(tenantId: UUID, user: String, language: String, translateLanguage: String, searchInput: String, page: Int?): WordsDataResponse {
         val currentPage = if (page == 1) {
-            1
+            0
         } else {
             page?.minus(1)?.times(10)
         }
@@ -51,8 +51,8 @@ class WordServiceImpl: WordService {
     }
 
     override fun addWord(tenantId: UUID, newWord: WordDraft): Word {
-        if (wordDao.check(tenantId, newWord.word) != null) {
-            throw UserWithGivenEmailAlreadyExistsException("Word: ${newWord.word} already exists.")
+        if (wordDao.check(tenantId, newWord.word, newWord.translate) != null) {
+            throw UserWithGivenEmailAlreadyExistsException("Word: ${newWord.word} with translation ${newWord.translate} already exists.")
         }
 
         val translatedWord = TTranslatedWordsRecord(
