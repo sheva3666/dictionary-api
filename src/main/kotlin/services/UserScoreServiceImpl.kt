@@ -2,7 +2,6 @@ package services
 
 import dao.UserScoreDaoImpl
 import dto.UserScore
-import exception.UserNotFoundException
 import exception.UserWithGivenEmailAlreadyExistsException
 import jooq.generated.tables.records.TUserScoreRecord
 import java.util.*
@@ -10,13 +9,23 @@ import java.util.*
 class UserScoreServiceImpl: UserScoreService {
     private val userScoreDao = UserScoreDaoImpl()
 
-    override fun getUserScore(tenantId: UUID, userEmail: String): UserScore {
-        return userScoreDao.get(tenantId, userEmail)
-            ?: throw UserNotFoundException("Dear: $userEmail please first you should login.")
+    override fun getUserScore(tenantId: UUID, userEmail: String, language: String): UserScore {
+        val userScore = userScoreDao.get(tenantId, userEmail, language)
+
+        if (userScore == null) {
+            val userScoreRecord = TUserScoreRecord(
+                cTenantId = tenantId,
+                cUserEmail = userEmail,
+                cScore = 0,
+                cLanguage = language
+            )
+            return userScoreDao.add(userScoreRecord)
+        }
+        return userScore
     }
 
     override fun updateUserScore(tenantId: UUID, updatedUserScore: UserScore): UserScore {
-        val currentScore = userScoreDao.get(tenantId, updatedUserScore.userEmail)
+        val currentScore = userScoreDao.get(tenantId, updatedUserScore.userEmail, updatedUserScore.language)
 
         if (currentScore == null) {
             throw UserWithGivenEmailAlreadyExistsException("Dear: ${updatedUserScore.userEmail} please first you should start exercise.")
@@ -32,6 +41,7 @@ class UserScoreServiceImpl: UserScoreService {
             cTenantId = tenantId,
             cUserEmail = updatedUserScore.userEmail,
             cScore = newScore,
+            cLanguage = updatedUserScore.language
         )
 
         return userScoreDao.update(userScoreRecord)
@@ -42,10 +52,11 @@ class UserScoreServiceImpl: UserScoreService {
         val authRecord = TUserScoreRecord(
             cUserEmail = userScore.userEmail,
             cTenantId = tenantId,
-            cScore = userScore.score
+            cScore = userScore.score,
+            cLanguage = userScore.language
         )
 
-        if (userScoreDao.get(tenantId, userScore.userEmail) !== null) {
+        if (userScoreDao.get(tenantId, userScore.userEmail, userScore.language) !== null) {
             return userScoreDao.update(authRecord)
         }
 

@@ -14,12 +14,13 @@ import utils.getDashedTenantId
 fun Route.userScoreRoute() {
     val userScoreService = UserScoreServiceImpl()
 
-    get("score/{userEmail}") {
+    get("score/{userEmail}/{language}") {
         val userEmail = call.parameters["userEmail"].toString()
+        val language = call.parameters["language"].toString()
         val tenantId = getDashedTenantId(call.request.header("authorization")!!)
 
         try {
-            call.respond(userScoreService.getUserScore(tenantId, userEmail))
+            call.respond(userScoreService.getUserScore(tenantId, userEmail, language))
         } catch (e: UserNotFoundException) {
             call.respond(HttpStatusCode.NotFound, e.message.toString())
         }

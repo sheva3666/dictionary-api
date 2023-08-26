@@ -5,7 +5,7 @@ import jooq.generated.tables.records.TUserScoreRecord
 import java.util.*
 
 interface UserScoreDao {
-    fun get(tenantId: UUID, userEmail: String): UserScore?
+    fun get(tenantId: UUID, userEmail: String, language: String): UserScore?
 
     fun add(userScoreRecord: TUserScoreRecord): UserScore
 

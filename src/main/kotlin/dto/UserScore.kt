@@ -7,4 +7,5 @@ import kotlinx.serialization.Serializable
 data class UserScore(
     val userEmail: String,
     val score: Int,
+    val language: String
 )

@@ -12,12 +12,12 @@ import java.util.*
 
 
 class UserScoreDaoImpl: UserScoreDao {
-    override fun get(tenantId: UUID, userEmail: String): UserScore? {
+    override fun get(tenantId: UUID, userEmail: String, language: String): UserScore? {
         try {
             with(T_USER_SCORE) {
                 val auth =
                     dslContext.select(DSL.asterisk()).from(T_USER_SCORE).where(C_TENANT_ID.equal(tenantId))
-                        .and(C_USER_EMAIL.equal(userEmail)).fetchOneInto(
+                        .and(C_USER_EMAIL.equal(userEmail)).and(C_LANGUAGE.equal(language)).fetchOneInto(
                             T_USER_SCORE
                         ) ?: return null
 
@@ -36,6 +36,7 @@ class UserScoreDaoImpl: UserScoreDao {
                 cUserEmail = userScoreRecord.cUserEmail
                 cTenantId = userScoreRecord.cTenantId
                 cScore = userScoreRecord.cScore
+                cLanguage = userScoreRecord.cLanguage
                 store()
             }
             return convertToUserScore(newRecord)
@@ -51,12 +52,14 @@ class UserScoreDaoImpl: UserScoreDao {
                     .from(T_USER_SCORE)
                     .where(C_TENANT_ID.equal(userScoreRecord.cTenantId))
                     .and(C_USER_EMAIL.equal(userScoreRecord.cUserEmail))
+                    .and(C_LANGUAGE.equal(userScoreRecord.cLanguage))
                     .fetchOneInto(T_USER_SCORE)!!
 
                 with(record) {
                     cUserEmail = userScoreRecord.cUserEmail
                     cTenantId = userScoreRecord.cTenantId
                     cScore = userScoreRecord.cScore
+                    cLanguage = userScoreRecord.cLanguage
                     update()
                 }
                 return convertToUserScore(record)
@@ -71,7 +74,7 @@ class UserScoreDaoImpl: UserScoreDao {
             return UserScore(
                 userEmail = cUserEmail!!,
                 score = cScore!!,
-
+                language = cLanguage!!
             )
         }
     }

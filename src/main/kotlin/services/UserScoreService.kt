@@ -5,7 +5,7 @@ import java.util.*
 
 interface UserScoreService {
 
-    fun getUserScore(tenantId: UUID, userEmail: String): UserScore
+    fun getUserScore(tenantId: UUID, userEmail: String, language: String): UserScore
 
     fun updateUserScore(tenantId: UUID, updatedUserScore: UserScore): UserScore
 
