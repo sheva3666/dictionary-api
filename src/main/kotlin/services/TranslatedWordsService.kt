@@ -4,5 +4,5 @@ import dto.TranslatedWord
 import java.util.*
 
 interface TranslatedWordsService {
-    fun getRandomTranslatedWords(tenantId: UUID, language: String): List<TranslatedWord>
+    fun getRandomTranslatedWords(tenantId: UUID, userEmail: String, languageForLearn: String, language: String): List<TranslatedWord>
 }

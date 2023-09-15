@@ -11,11 +11,13 @@ import utils.getDashedTenantId
 fun Route.translatedWordsRoute() {
     val translatedWordsService = TranslatedWordsServiceImpl()
 
-    get("translate/{language}") {
+    get("translate/{userEmail}/{languageForLearn}/{language}") {
         val language = call.parameters["language"].toString()
+        val languageForLearn = call.parameters["languageForLearn"].toString()
+        val userEmail = call.parameters["userEmail"].toString()
         val tenantId = getDashedTenantId(call.request.header("authorization")!!)
 
-        val translatedWords = translatedWordsService.getRandomTranslatedWords(tenantId, language)
+        val translatedWords = translatedWordsService.getRandomTranslatedWords(tenantId, userEmail, languageForLearn, language)
 
         if (translatedWords == null) {
             call.respond(
