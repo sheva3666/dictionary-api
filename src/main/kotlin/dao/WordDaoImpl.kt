@@ -89,11 +89,12 @@ class WordDaoImpl: WordDao {
         }
     }
 
-    override fun check(tenantId: UUID, word: String, translate: String): Word? {
+    override fun check(tenantId: UUID, user: String, word: String, translate: String): Word? {
         try {
             with(T_WORDS) {
                 val word =
                     dslContext.select(DSL.asterisk()).from(T_WORDS).where(C_TENANT_ID.equal(tenantId))
+                        .and(C_USER.equal(user))
                         .and(C_WORD.equal(word))
                         .and(C_TRANSLATE.equal(translate))
                         .fetchOneInto(

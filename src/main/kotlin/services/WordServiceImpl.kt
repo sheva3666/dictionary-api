@@ -51,7 +51,7 @@ class WordServiceImpl: WordService {
     }
 
     override fun addWord(tenantId: UUID, newWord: WordDraft): Word {
-        if (wordDao.check(tenantId, newWord.word, newWord.translate) != null) {
+        if (wordDao.check(tenantId, newWord.user, newWord.word, newWord.translate) != null) {
             throw UserWithGivenEmailAlreadyExistsException("Word: ${newWord.word} with translation ${newWord.translate} already exists.")
         }
 
