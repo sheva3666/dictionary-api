@@ -1,13 +1,9 @@
 package services
 
-import dto.Auth
+import dto.User
 import java.util.*
 
 interface AuthService {
 
-    fun getAuth(tenantId: UUID, userEmail: String): Auth
-
-    fun updateAuth(tenantId: UUID, updatedAuth: Auth): Auth
-
-    fun loginUser(tenantId: UUID, email: String, password: String): Auth
+    fun loginUser(tenantId: UUID, email: String, password: String): User
 }

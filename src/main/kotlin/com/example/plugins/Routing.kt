@@ -6,13 +6,13 @@ import io.ktor.server.routing.*
 import routes.*
 
 fun Application.configureRouting() {
-
     routing {
+        openUsersRoute()
+        authRoute()
         authenticate {
             usersRoute()
             wordsRoute()
             translatedWordsRoute()
-            authRoute()
             userScoreRoute()
         }
     }
