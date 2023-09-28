@@ -1,18 +1,15 @@
 package services
 
-import dao.AuthDaoImpl
 import dao.UserDaoImpl
-import dto.User
 import dto.UserDraft
+import dto.UserVisibleData
+import exception.UserNotFoundException
 import exception.UserWithGivenEmailAlreadyExistsException
-import jooq.generated.tables.records.TAuthRecord
 import jooq.generated.tables.records.TUserRecord
 import java.util.*
 
 class UserServiceImpl: UserService {
     private val userDao = UserDaoImpl()
-    private val authDao = AuthDaoImpl()
-
 
     override fun createUser(tenantId: UUID, user: UserDraft): String {
         if (userDao.getByEmail(tenantId, user.email) != null) {
@@ -34,31 +31,39 @@ class UserServiceImpl: UserService {
 
     }
 
-    override fun updateUser(tenantId: UUID, updatedUser: UserDraft): User {
-
-        if (userDao.login(tenantId, updatedUser.email, updatedUser.password) == null) {
-            throw UserWithGivenEmailAlreadyExistsException("Password is invalid.")
-        }
+    override fun updateUser(tenantId: UUID, updatedUser: UserVisibleData): UserVisibleData {
 
         val userRecord = TUserRecord(
             cTenantId = tenantId,
             cUserEmail = updatedUser.email,
-            cUserPassword = updatedUser.password,
             cUserLanguage = updatedUser.language,
             cUserLanguageForLearn = updatedUser.languageForLearn
-
         )
-
-        val authRecord = TAuthRecord(
-            cTenantId = tenantId,
-            cUserEmail = updatedUser.email,
-            cUserAuth = true,
-            cLanguage = updatedUser.language,
-            cLanguageForLearn = updatedUser.languageForLearn
-        )
-
-        authDao.update(authRecord)
 
         return userDao.update(userRecord)
+    }
+
+    override fun updatePassword(tenantId: UUID, email: String, password: String, newPassword: String): Boolean {
+        if (userDao.login(tenantId, email, password) == null) {
+            throw UserNotFoundException("Incorrect password.")
+        }
+
+        val userRecord = TUserRecord(
+            cTenantId = tenantId,
+            cUserEmail = email,
+            cUserPassword = newPassword,
+        )
+
+        return userDao.updatePassword(userRecord)
+
+    }
+
+    override fun getUser(tenantId: UUID, email: String): UserVisibleData? {
+
+        if (userDao.getByEmail(tenantId, email) == null) {
+            throw UserNotFoundException("User with email: $email doesn't exist.")
+        }
+
+        return userDao.getByEmail(tenantId, email)
     }
 }

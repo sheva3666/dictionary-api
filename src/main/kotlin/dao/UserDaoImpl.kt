@@ -2,6 +2,7 @@ package dao
 
 import com.example.dslContext
 import dto.User
+import dto.UserVisibleData
 import exception.CreateUserException
 import exception.GetUserException
 import exception.UpdateUserException
@@ -29,16 +30,16 @@ class UserDaoImpl: UserDao {
         }
     }
 
-    override fun getByEmail(tenantId: UUID, email: String): User? {
+    override fun getByEmail(tenantId: UUID, email: String): UserVisibleData? {
         try {
             with(T_USER) {
                 val user =
-                    dslContext.select(DSL.asterisk()).from(T_USER).where(C_TENANT_ID.equal(tenantId))
+                    dslContext.select(C_ID, C_USER_EMAIL, C_USER_LANGUAGE, C_USER_LANGUAGE_FOR_LEARN).from(T_USER).where(C_TENANT_ID.equal(tenantId))
                         .and(C_USER_EMAIL.equal(email)).fetchOneInto(
                             T_USER
                         ) ?: return null
 
-                return convertToUser(user)
+                return convertToUserVisibleData(user)
             }
 
         } catch (e: Exception) {
@@ -46,7 +47,29 @@ class UserDaoImpl: UserDao {
         }
     }
 
-    override fun update(updatedUser: TUserRecord): User {
+    override fun update(updatedUser: TUserRecord): UserVisibleData {
+        try {
+            with(T_USER) {
+                val record = dslContext.select(asterisk())
+                    .from(T_USER)
+                    .where(C_TENANT_ID.equal(updatedUser.cTenantId))
+                    .and(C_USER_EMAIL.equal(updatedUser.cUserEmail))
+                    .fetchOneInto(T_USER)!!
+
+                with(record) {
+                    cUserEmail = updatedUser.cUserEmail
+                    cUserLanguage = updatedUser.cUserLanguage
+                    cUserLanguageForLearn = updatedUser.cUserLanguageForLearn
+                    update()
+                }
+                return convertToUserVisibleData(record)
+            }
+        } catch (e: Exception) {
+            throw UpdateUserException("Unable to update User. Exception: $e")
+        }
+    }
+
+    override fun updatePassword(updatedUser: TUserRecord): Boolean {
         try {
             with(T_USER) {
                 val record = dslContext.select(asterisk())
@@ -58,11 +81,9 @@ class UserDaoImpl: UserDao {
                 with(record) {
                     cUserEmail = updatedUser.cUserEmail
                     cUserPassword = updatedUser.cUserPassword
-                    cUserLanguage = updatedUser.cUserLanguage
-                    cUserLanguageForLearn = updatedUser.cUserLanguageForLearn
                     update()
                 }
-                return convertToUser(record)
+                return true
             }
         } catch (e: Exception) {
             throw UpdateUserException("Unable to update User. Exception: $e")
@@ -94,6 +115,16 @@ class UserDaoImpl: UserDao {
                 id = cId!!,
                 email = cUserEmail!!,
                 password = cUserPassword!!,
+                language = cUserLanguage!!,
+                languageForLearn = cUserLanguageForLearn!!
+            )
+        }
+    }
+
+    private fun convertToUserVisibleData(record: TUserRecord): UserVisibleData {
+        with(record) {
+            return UserVisibleData(
+                email = cUserEmail!!,
                 language = cUserLanguage!!,
                 languageForLearn = cUserLanguageForLearn!!
             )
