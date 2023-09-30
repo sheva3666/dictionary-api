@@ -32,7 +32,7 @@ class WordServiceImpl: WordService {
 
     override fun getAllWords(tenantId: UUID, user: String, language: String, translateLanguage: String, page: Int?): WordsDataResponse {
         val currentPage = if (page == 1) {
-             1
+             0
         } else {
             page?.minus(1)?.times(10)
         }

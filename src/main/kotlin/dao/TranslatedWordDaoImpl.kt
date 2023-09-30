@@ -13,8 +13,8 @@ import java.util.*
 class TranslatedWordDaoImpl: TranslatedWordDao {
     override fun getRandomTranslatedWords(tenantId: UUID, language: String, limit: Int): List<TranslatedWord> {
         try {
-            return dslContext.select(DSL.asterisk()).from(T_TRANSLATED_WORDS).where(T_TRANSLATED_WORDS.C_TENANT_ID.equal(tenantId))
-                .and(T_TRANSLATED_WORDS.C_LANGUAGE.equal(language)).orderBy(rand()).limit(limit)
+            return dslContext.select(DSL.asterisk()).from(T_TRANSLATED_WORDS)
+                .where(T_TRANSLATED_WORDS.C_LANGUAGE.equal(language)).orderBy(rand()).limit(limit)
                 .fetchInto(T_TRANSLATED_WORDS)
                 .toList()
                 .map { convertToTranslatedWord(it) }
