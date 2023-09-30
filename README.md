@@ -1,4 +1,4 @@
-# dictionary-api is API for ditionary application. 
+# dictionary-api is API for dictionary application. 
 
 With this application I store words for dictionary  which user want to learn. 
 
